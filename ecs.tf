@@ -1,26 +1,28 @@
 module "ecs" {
   source       = "terraform-aws-modules/ecs/aws"
-  cluster_name = "pinnacle-${var.environment}"
+  cluster_name = "${var.project}-${var.environment}"
 }
 
 resource "aws_ecs_task_definition" "task" {
-  family = "pinnacle"
+  family = "${var.project}-${var.environment}"
   requires_compatibilities = [
     "FARGATE",
   ]
   execution_role_arn = aws_iam_role.pinnacle_role.arn
-  network_mode       = "awsvpc"
-  cpu                = 256
-  memory             = 512
+  network_mode       = local.ecs_network_mode
+  cpu                = local.ecs_task_cpu
+  memory             = local.ecs_task_memory
   container_definitions = jsonencode([
     {
-      name      = "${var.repository_name}-${var.environment}"
-      image     = var.image_name
+      name      = local.ecs_task_container_name
+      image     = local.ecs_task_image
+      cpu       = local.ecs_task_cpu
+      memory    = local.ecs_task_memory
       essential = true
       portMappings = [
         {
-          containerPort = 8000
-          hostPort      = 8000
+          containerPort = local.application_port
+          hostPort      = local.application_port
         }
       ]
     }
@@ -28,10 +30,10 @@ resource "aws_ecs_task_definition" "task" {
 }
 
 resource "aws_ecs_service" "service" {
-  name            = "pinnacle"
+  name            = "${var.project}-${var.environment}"
   cluster         = module.ecs.cluster_id
   task_definition = aws_ecs_task_definition.task.arn
-  desired_count   = 1
+  desired_count   = 3
 
   network_configuration {
     subnets         = module.vpc.private_subnets
@@ -40,8 +42,8 @@ resource "aws_ecs_service" "service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.ecs_alb_tg.arn
-    container_name   = "${var.repository_name}-${var.environment}"
-    container_port   = 8000
+    container_name   = local.ecs_task_container_name
+    container_port   = local.application_port
   }
 
   capacity_provider_strategy {

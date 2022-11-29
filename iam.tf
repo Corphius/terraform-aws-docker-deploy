@@ -1,5 +1,5 @@
 resource "aws_iam_role" "pinnacle_role" {
-  name = "pinnacle-${var.environment}"
+  name = "${var.project}-${var.environment}-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -20,7 +20,7 @@ resource "aws_iam_role" "pinnacle_role" {
 }
 
 resource "aws_iam_role_policy" "pinnacle_policy" {
-  name = "pinnacle-policy"
+  name = "${var.project}-${var.environment}-policy"
 
   role = aws_iam_role.pinnacle_role.id
 
@@ -44,6 +44,6 @@ resource "aws_iam_role_policy" "pinnacle_policy" {
 }
 
 resource "aws_iam_instance_profile" "pinnacle_profile" {
-  name = "pinnacle-profile-${var.environment}"
+  name = "${var.project}-${var.environment}-profile"
   role = aws_iam_role.pinnacle_role.id
 }

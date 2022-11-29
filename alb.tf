@@ -1,12 +1,12 @@
 resource "aws_lb" "ecs_alb" {
-  name            = "pinnacle-${var.environment}"
+  name            = "${var.project}-lb-${var.environment}"
   security_groups = [aws_security_group.alb.id]
   subnets         = module.vpc.public_subnets
 }
 
 resource "aws_lb_target_group" "ecs_alb_tg" {
-  name        = "pinnacle-tg-${var.environment}"
-  port        = 8000
+  name        = "${var.project}-lb-tg-${var.environment}"
+  port        = local.application_port
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = module.vpc.vpc_id
@@ -14,7 +14,7 @@ resource "aws_lb_target_group" "ecs_alb_tg" {
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.ecs_alb.arn
-  port              = "8000"
+  port              = local.application_port
   protocol          = "HTTP"
 
   default_action {

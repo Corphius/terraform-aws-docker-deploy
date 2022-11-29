@@ -3,9 +3,9 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "repository_name" {
+variable "project" {
   type    = string
-  default = "pinnacle-prod"
+  default = "pinnacle"
 }
 
 variable "environment" {
@@ -16,9 +16,4 @@ variable "environment" {
 variable "profile" {
   type    = string
   default = "default"
-}
-
-variable "image_name" {
-  type    = string
-  default = "latest"
 }
