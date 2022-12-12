@@ -25,5 +25,10 @@ locals {
     GOOGLE_CLIENT_ID = "value"
     GOOGLE_SECRET    = "value"
     NODE_ENV         = "value"
+    PORT             = "value"
   }
+
+  #cloudwatch
+  log_rentation_days = 30
 }
+
