@@ -43,3 +43,17 @@ resource "aws_security_group_rule" "pinnacle_out" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.private.id
 }
+
+resource "aws_security_group" "database" {
+  name   = "${var.project}-${var.environment}-database"
+  vpc_id = module.vpc.vpc_id
+}
+
+resource "aws_security_group_rule" "database_in" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.database.id
+  source_security_group_id = aws_security_group.private.id
+}
