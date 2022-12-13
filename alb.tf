@@ -14,7 +14,7 @@ resource "aws_lb_target_group" "ecs_alb_tg" {
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.ecs_alb.arn
-  port              = local.application_port
+  port              = local.host_port
   protocol          = "HTTP"
 
   default_action {

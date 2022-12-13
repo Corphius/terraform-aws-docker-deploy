@@ -1,7 +1,8 @@
 locals {
   # application
-  application_port = 80
+  application_port = 3000
   region           = "us-east-1"
+  host_port        = 80
 
   # ecs
   ecs_network_mode          = "awsvpc"
