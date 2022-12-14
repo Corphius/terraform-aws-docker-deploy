@@ -31,5 +31,12 @@ locals {
 
   #cloudwatch
   log_rentation_days = 30
+
+  #alb health check
+  application_matcher             = 200
+  application_path                = "/health"
+  application_interval            = 60
+  application_healthy_threshold   = 3
+  application_unhealthy_threshold = 3
 }
 

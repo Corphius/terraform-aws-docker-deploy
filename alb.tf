@@ -10,6 +10,16 @@ resource "aws_lb_target_group" "ecs_alb_tg" {
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = module.vpc.vpc_id
+
+  health_check {
+
+    # port                = local.host_port
+    # matcher             = local.application_matcher
+    # path                = local.application_path
+    interval            = local.application_interval
+    healthy_threshold   = local.application_healthy_threshold
+    unhealthy_threshold = local.application_unhealthy_threshold
+  }
 }
 
 resource "aws_lb_listener" "http" {
